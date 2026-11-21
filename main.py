@@ -59,9 +59,9 @@ class Record:
               
 
     def remove_phone(self, number):
-        phone = [p for p in self.phones if p.value == number]
-        if phone:
-            self.phones.remove(phone)
+        ind = [n for n, p in enumerate(self.phones) if p.value == number]
+        if ind:
+            self.phones.pop(ind[0])
             return 'Phone removed.'
         else:
             return 'Phone does not exist.'
@@ -70,15 +70,19 @@ class Record:
     def find_phone(self, number):
         phone = [p for p in self.phones if p.value == number]
         if phone:
-            return phone[0].value
+            return phone[0]
         else:
             return 'Phone not found.'
 
     def edit_phone(self, old_number, new_number):
         ind = [ind for ind, p in enumerate(self.phones) if p.value == old_number]
         if ind:
-            self.phones[ind[0]] = Phone(new_number)
-            return 'Phone edited.'
+            new_phone = Phone(new_number)
+            if new_phone:
+                self.phones[ind[0]] = new_phone
+                return 'Phone edited.'
+            else:
+                return 'Phone not edited.'
         else:
              return 'Phone not found.'
 
@@ -133,12 +137,18 @@ if __name__ == "__main__":
 
     # Знаходження та редагування телефону для John
     john = book.find("John")
-    john.edit_phone("1234567890", "1112223333")
+    john.edit_phone("1234567890", "1112333")
+    john.edit_phone("5555555555", "1112223333")
+
+    john.remove_phone("1112223333")
+
+    john.remove_phone("1001000000")
 
     print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
     # Пошук конкретного телефону в записі John
     found_phone = john.find_phone("5555555555")
+    # found_phone = john.find_phone("55555555")
 
     print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
 
